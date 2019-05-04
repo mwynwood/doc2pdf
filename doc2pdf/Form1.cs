@@ -23,6 +23,7 @@ namespace doc2pdf
     {
 
         ArrayList allTheFiles = new ArrayList();
+        string coverPageFileName = "CoverPage.pdf";
 
         public void generateCoverPage(string outputFileName, string theImage)
         {
@@ -60,18 +61,46 @@ namespace doc2pdf
             InitializeComponent();
             this.Text = Application.ProductName;
 
-            //allTheFiles.Insert(0, "Cover Page");
-            FileInfo fiCoverPage = new FileInfo("CoverPage.pdf");
+            FileInfo fiCoverPage = new FileInfo(coverPageFileName);
             allTheFiles.Insert(0, fiCoverPage);
 
-            updateListBox();
+            updateInterface();
         }
 
-        public void updateListBox()
+        public void updateInterface()
         {
             listBoxDocs.DataSource = null;
             listBoxDocs.DataSource = allTheFiles;
             listBoxDocs.DisplayMember = "Name";
+
+            if(allTheFiles.Count == 0)
+            {
+                buttonDocRemove.Enabled = false;
+                buttonDocMoveUp.Enabled = false;
+                buttonDocMoveDown.Enabled = false;
+                buttonGo.Enabled = false;
+            } else
+            {
+                buttonDocRemove.Enabled = true;
+                buttonDocMoveUp.Enabled = true;
+                buttonDocMoveDown.Enabled = true;
+                buttonGo.Enabled = true;
+            }
+
+            if (allTheFiles.Count <= 2 && checkBoxCoverPage.Checked == true)
+            {
+                buttonDocMoveUp.Enabled = false;
+                buttonDocMoveDown.Enabled = false;
+            }
+            else if (allTheFiles.Count <= 1 && checkBoxCoverPage.Checked == false)
+            {
+                buttonDocMoveUp.Enabled = false;
+                buttonDocMoveDown.Enabled = false;
+            }
+            else { 
+                buttonDocMoveUp.Enabled = true;
+                buttonDocMoveDown.Enabled = true;
+            }
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -115,11 +144,11 @@ namespace doc2pdf
             } else
             {
                 groupBoxCoverPage.Enabled = true;                
-                //allTheFiles.Insert(0, "Cover Page");
-                FileInfo fiCoverPage = new FileInfo("CoverPage.pdf");
+                FileInfo fiCoverPage = new FileInfo(coverPageFileName);
                 allTheFiles.Insert(0, fiCoverPage);
             }
-            updateListBox();
+            updateInterface();
+            listBoxDocs.ClearSelected();
         }
 
         private void ButtonDocAdd_Click(object sender, EventArgs e)
@@ -133,7 +162,8 @@ namespace doc2pdf
                 FileInfo fi = new FileInfo(@openFileDialog1.FileName);
                 //allTheFiles.Add(fi);
                 allTheFiles.Insert(allTheFiles.Count, fi);
-                updateListBox();
+                updateInterface();
+                listBoxDocs.SelectedIndex = allTheFiles.Count - 1;
             }
             
         }
@@ -142,15 +172,72 @@ namespace doc2pdf
         {
             if (listBoxDocs.SelectedIndex > -1)
             {
-                if (allTheFiles[listBoxDocs.SelectedIndex].ToString() != "CoverPage.pdf")
+                if (allTheFiles[listBoxDocs.SelectedIndex].ToString() != coverPageFileName)
                 {
                     allTheFiles.RemoveAt(listBoxDocs.SelectedIndex);
-                    updateListBox();
+                    updateInterface();
                 }
                 else
                 {
                     checkBoxCoverPage.Checked = false;
                 }
+            }
+        }
+
+        private void ButtonDocMoveUp_Click(object sender, EventArgs e)
+        {
+            int selection = listBoxDocs.SelectedIndex;
+            int toppest = 0;
+
+            if(checkBoxCoverPage.Checked == true)
+            {
+                toppest = 1;
+            } else
+            {
+                toppest = 0;
+            }
+
+            if (selection > toppest)
+            {
+                Object selected = allTheFiles[selection];
+                Object above = allTheFiles[selection - 1];
+
+                allTheFiles.RemoveAt(selection);
+                allTheFiles.RemoveAt(selection - 1);
+
+                allTheFiles.Insert(selection - 1, selected);
+                allTheFiles.Insert(selection, above);
+
+                listBoxDocs.SelectedIndex = selection - 1;
+
+                updateInterface();
+            }            
+        }
+
+        private void ButtonDocMoveDown_Click(object sender, EventArgs e)
+        {
+            int selection = listBoxDocs.SelectedIndex;
+
+            if(selection == allTheFiles.Count - 1)
+            {
+                //MessageBox.Show("already at the bottom");
+            } else if(selection == 0 && checkBoxCoverPage.Checked == true)
+            {
+                //MessageBox.Show("you can't move the Cover Page down");
+            } else
+            {
+                Object selected = allTheFiles[selection];
+                Object below = allTheFiles[selection + 1];
+
+                allTheFiles.RemoveAt(selection + 1);
+                allTheFiles.RemoveAt(selection);
+
+                allTheFiles.Insert(selection, below);
+                allTheFiles.Insert(selection + 1, selected);
+
+                listBoxDocs.SelectedIndex = selection + 1;
+
+                updateInterface();
             }
         }
     }

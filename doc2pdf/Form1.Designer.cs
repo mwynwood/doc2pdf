@@ -298,6 +298,7 @@
             this.buttonDocMoveDown.TabIndex = 2;
             this.buttonDocMoveDown.Text = "Down";
             this.buttonDocMoveDown.UseVisualStyleBackColor = true;
+            this.buttonDocMoveDown.Click += new System.EventHandler(this.ButtonDocMoveDown_Click);
             // 
             // buttonDocMoveUp
             // 
@@ -307,6 +308,7 @@
             this.buttonDocMoveUp.TabIndex = 1;
             this.buttonDocMoveUp.Text = "Up";
             this.buttonDocMoveUp.UseVisualStyleBackColor = true;
+            this.buttonDocMoveUp.Click += new System.EventHandler(this.ButtonDocMoveUp_Click);
             // 
             // listBoxDocs
             // 
