@@ -1,15 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+//using System.Collections.Generic;
+//using System.ComponentModel;
+//using System.Data;
+//using System.Drawing;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using System.IO;
 using System.Collections;
+
+using Microsoft.Office.Interop;
 
 using PdfSharp;
 using PdfSharp.Drawing;
@@ -22,7 +24,8 @@ namespace doc2pdf
     public partial class Form1 : Form 
     {
 
-        ArrayList allTheFiles = new ArrayList();
+        ArrayList allTheFiles = new ArrayList(); // Used to keep track of the DOCs
+        ArrayList allThePDFs = new ArrayList(); // Used to keep a track of the PDFs
         string coverPageFileName = "CoverPage.pdf";
 
         public void generateCoverPage(string outputFileName, string theImage)
@@ -54,6 +57,34 @@ namespace doc2pdf
 
             // Save the document...
             document.Save(outputFileName);
+            document.Close();
+        }
+
+        public FileInfo convertDoc2Pdf(FileInfo documentToConvert)
+        {
+            if(documentToConvert.Extension == ".pdf" && documentToConvert.Name != coverPageFileName)
+            {
+                // If it's already a PDF, just copy it to the working dir
+                documentToConvert.CopyTo(Application.StartupPath + "\\" + documentToConvert.Name, true);
+                return new FileInfo(Application.StartupPath + "\\" + documentToConvert.Name);
+            }
+
+            var appWord = new Microsoft.Office.Interop.Word.Application();
+            if (appWord.Documents != null)
+            {
+                var wordDocument = appWord.Documents.Open(documentToConvert.FullName);
+                FileInfo pdfDocName = new FileInfo(Application.StartupPath + "\\" + documentToConvert.Name + ".pdf");
+
+                if (wordDocument != null)
+                {
+                    wordDocument.SaveAs2(pdfDocName.FullName, Microsoft.Office.Interop.Word.WdSaveFormat.wdFormatPDF);
+                    wordDocument.Close();
+                    appWord.Quit();
+                    return pdfDocName;
+                }
+            }
+            appWord.Quit();
+            return null;
         }
 
         public Form1()
@@ -126,12 +157,62 @@ namespace doc2pdf
             saveFileDialog1.Filter = "PDF File|*.PDF";
             saveFileDialog1.Title = "Save the merged document";
             saveFileDialog1.DefaultExt = ".pdf";
+            saveFileDialog1.FileName = "merged";
             saveFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString();
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                generateCoverPage(saveFileDialog1.FileName, textBoxLogo.Text);
-                MessageBox.Show("Done!", Application.ProductName);
+                Cursor.Current = Cursors.WaitCursor;
+
+                // Generate the Cover Page
+                if (checkBoxCoverPage.Checked == true)
+                {
+                    generateCoverPage(coverPageFileName, textBoxLogo.Text);
+                }
+
+                // Convert all the DOC and DOCX files to PDFs
+                // And put the PDFs in a new ArrayList
+                allThePDFs.Clear();
+                foreach (FileInfo doc in allTheFiles)
+                {
+                    allThePDFs.Add(convertDoc2Pdf(doc));
+                }
+
+                // Merge the PDF files into one
+                PdfDocument outputDocument = new PdfDocument();
+                foreach (FileInfo file in allThePDFs)
+                {
+                    // Attention: must be in Import mode
+                    var mode = PdfDocumentOpenMode.Import;
+                    var inputDocument = PdfReader.Open(file.FullName, mode);
+
+                    int totalPages = inputDocument.PageCount;
+                    for (int pageNo = 0; pageNo < totalPages; pageNo++)
+                    {
+                        // Get the page from the input document...
+                        PdfPage page = inputDocument.Pages[pageNo];
+
+                        // ...and copy it to the output document.
+                        outputDocument.AddPage(page);
+                    }
+                }
+                // Save the document
+                outputDocument.Save(saveFileDialog1.FileName);
+
+                // Delete the PDF files
+                if (checkBoxDeletePdfsAfterMerge.Checked == true)
+                {
+                    foreach (FileInfo file in allThePDFs)
+                    {
+                        file.Delete();
+                    }
+                    FileInfo cp = new FileInfo(coverPageFileName);
+                    cp.Delete();
+                }
+
+                Cursor.Current = Cursors.Default;
+                MessageBox.Show("Merge Complete!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                System.Diagnostics.Process.Start(saveFileDialog1.FileName);
             }
         }
 
@@ -160,7 +241,6 @@ namespace doc2pdf
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 FileInfo fi = new FileInfo(@openFileDialog1.FileName);
-                //allTheFiles.Add(fi);
                 allTheFiles.Insert(allTheFiles.Count, fi);
                 updateInterface();
                 listBoxDocs.SelectedIndex = allTheFiles.Count - 1;
@@ -239,6 +319,11 @@ namespace doc2pdf
 
                 updateInterface();
             }
+        }
+
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Created by Marcus Wynwood", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

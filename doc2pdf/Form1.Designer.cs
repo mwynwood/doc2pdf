@@ -43,7 +43,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,6 +59,7 @@
             this.buttonGo = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.checkBoxCoverPage = new System.Windows.Forms.CheckBox();
+            this.checkBoxDeletePdfsAfterMerge = new System.Windows.Forms.CheckBox();
             this.groupBoxCoverPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -213,7 +215,7 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem1,
+            this.fileToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -221,18 +223,24 @@
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // fileToolStripMenuItem1
+            // fileToolStripMenuItem
             // 
-            this.fileToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripSeparator,
             this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem1.Name = "fileToolStripMenuItem1";
-            this.fileToolStripMenuItem1.Size = new System.Drawing.Size(64, 36);
-            this.fileToolStripMenuItem1.Text = "&File";
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(64, 36);
+            this.fileToolStripMenuItem.Text = "&File";
+            // 
+            // toolStripSeparator
+            // 
+            this.toolStripSeparator.Name = "toolStripSeparator";
+            this.toolStripSeparator.Size = new System.Drawing.Size(321, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(151, 38);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -247,8 +255,9 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(194, 38);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
             this.aboutToolStripMenuItem.Text = "&About...";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
@@ -336,7 +345,7 @@
             this.checkBoxCoverPage.AutoSize = true;
             this.checkBoxCoverPage.Checked = true;
             this.checkBoxCoverPage.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxCoverPage.Location = new System.Drawing.Point(118, 82);
+            this.checkBoxCoverPage.Location = new System.Drawing.Point(51, 89);
             this.checkBoxCoverPage.Name = "checkBoxCoverPage";
             this.checkBoxCoverPage.Size = new System.Drawing.Size(232, 29);
             this.checkBoxCoverPage.TabIndex = 12;
@@ -344,11 +353,22 @@
             this.checkBoxCoverPage.UseVisualStyleBackColor = true;
             this.checkBoxCoverPage.CheckedChanged += new System.EventHandler(this.CheckBoxCoverPage_CheckedChanged);
             // 
+            // checkBoxDeletePdfsAfterMerge
+            // 
+            this.checkBoxDeletePdfsAfterMerge.AutoSize = true;
+            this.checkBoxDeletePdfsAfterMerge.Location = new System.Drawing.Point(337, 89);
+            this.checkBoxDeletePdfsAfterMerge.Name = "checkBoxDeletePdfsAfterMerge";
+            this.checkBoxDeletePdfsAfterMerge.Size = new System.Drawing.Size(281, 29);
+            this.checkBoxDeletePdfsAfterMerge.TabIndex = 13;
+            this.checkBoxDeletePdfsAfterMerge.Text = "Delete PDFs after Merge";
+            this.checkBoxDeletePdfsAfterMerge.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1300, 863);
+            this.Controls.Add(this.checkBoxDeletePdfsAfterMerge);
             this.Controls.Add(this.checkBoxCoverPage);
             this.Controls.Add(this.buttonGo);
             this.Controls.Add(this.groupBox2);
@@ -388,10 +408,6 @@
         private System.Windows.Forms.Button buttonLogo;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBoxLogo;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.PictureBox pictureBoxLogo;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -404,6 +420,12 @@
         private System.Windows.Forms.Button buttonDocRemove;
         private System.Windows.Forms.Button buttonDocMoveDown;
         private System.Windows.Forms.Button buttonDocMoveUp;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxDeletePdfsAfterMerge;
     }
 }
 
