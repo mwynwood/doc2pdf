@@ -17,6 +17,7 @@ using PdfSharp;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
+using System.Drawing;
 
 namespace doc2pdf
 {
@@ -82,6 +83,7 @@ namespace doc2pdf
         {
             InitializeComponent();
             this.Text = Application.ProductName;
+            this.Icon = Properties.Resources.icons8_merge_files_96;
 
             FileInfo fiCoverPage = new FileInfo(coverPageFileName);
             allTheFiles.Insert(0, fiCoverPage);
