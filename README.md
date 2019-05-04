@@ -1,5 +1,5 @@
 # doc2pdf2
 
-This is an attempt at making a C# version of my doc2pdf PowerShell script (https://github.com/mwynwood/doc2pdf)
+Bulk converts Word Documents to PDFs, and merge the PDFs into one.
 
-Other people want to use it, so it needs to have an easier GUI...
+It's a GUI version of my doc2pdf PowerShell script (https://github.com/mwynwood/doc2pdf)
