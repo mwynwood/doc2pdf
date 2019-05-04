@@ -83,7 +83,7 @@ namespace doc2pdf
         {
             InitializeComponent();
             this.Text = Application.ProductName;
-            this.Icon = Properties.Resources.icons8_merge_files_96;
+            this.Icon = doc2pdf.Properties.Resources.icons8_merge_files_96;
 
             FileInfo fiCoverPage = new FileInfo(coverPageFileName);
             allTheFiles.Insert(0, fiCoverPage);
@@ -315,7 +315,9 @@ namespace doc2pdf
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(Application.ProductName + "\n" + "Converts Word Docs to PDFs, and merges them together.\n\nCreated by Marcus Wynwood\nhttps://github.com/mwynwood/doc2pdf2", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Question);
+            //MessageBox.Show(Application.ProductName + "\n" + "Converts Word Docs to PDFs, and merges them together.\n\nCreated by Marcus Wynwood\nhttps://github.com/mwynwood/doc2pdf2", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Question);
+            AboutBox1 about = new AboutBox1();
+            about.ShowDialog();
         }
     }
 }
