@@ -23,7 +23,6 @@ namespace doc2pdf
 
     public partial class Form1 : Form 
     {
-
         ArrayList allTheFiles = new ArrayList(); // Used to keep track of the DOCs
         ArrayList allThePDFs = new ArrayList(); // Used to keep a track of the PDFs
         string coverPageFileName = "CoverPage.pdf";
@@ -31,15 +30,8 @@ namespace doc2pdf
         public void generateCoverPage(string outputFileName, string theImage)
         {
             PdfDocument document = new PdfDocument();
-            //document.Info.Title = "Created with PDFsharp";
-
-            // Create an empty page
             PdfPage page = document.AddPage();
-
-            // Get an XGraphics object for drawing
             XGraphics gfx = XGraphics.FromPdfPage(page);
-
-            // Create a font
             XFont font = new XFont("Calibri", 20, XFontStyle.Bold);
 
             // Draw the text
@@ -62,15 +54,14 @@ namespace doc2pdf
 
         public FileInfo convertDoc2Pdf(FileInfo documentToConvert)
         {
-            if(documentToConvert.Extension == ".pdf" && documentToConvert.Name != coverPageFileName)
+            var appWord = new Microsoft.Office.Interop.Word.Application();
+
+            if (documentToConvert.Extension == ".pdf" && documentToConvert.Name != coverPageFileName)
             {
                 // If it's already a PDF, just copy it to the working dir
                 documentToConvert.CopyTo(Application.StartupPath + "\\" + documentToConvert.Name, true);
                 return new FileInfo(Application.StartupPath + "\\" + documentToConvert.Name);
-            }
-
-            var appWord = new Microsoft.Office.Interop.Word.Application();
-            if (appWord.Documents != null)
+            }else if (appWord.Documents != null)
             {
                 var wordDocument = appWord.Documents.Open(documentToConvert.FullName);
                 FileInfo pdfDocName = new FileInfo(Application.StartupPath + "\\" + documentToConvert.Name + ".pdf");
@@ -185,19 +176,18 @@ namespace doc2pdf
                     // Attention: must be in Import mode
                     var mode = PdfDocumentOpenMode.Import;
                     var inputDocument = PdfReader.Open(file.FullName, mode);
-
                     int totalPages = inputDocument.PageCount;
                     for (int pageNo = 0; pageNo < totalPages; pageNo++)
                     {
                         // Get the page from the input document...
                         PdfPage page = inputDocument.Pages[pageNo];
-
                         // ...and copy it to the output document.
                         outputDocument.AddPage(page);
                     }
                 }
                 // Save the document
                 outputDocument.Save(saveFileDialog1.FileName);
+                outputDocument.Close();
 
                 // Delete the PDF files
                 if (checkBoxDeletePdfsAfterMerge.Checked == true)
@@ -323,7 +313,7 @@ namespace doc2pdf
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Created by Marcus Wynwood", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(Application.ProductName + "\n" + "Converts Word Docs to PDFs, and merges them together.\n\nCreated by Marcus Wynwood\nhttps://github.com/mwynwood/doc2pdf2", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
     }
 }
