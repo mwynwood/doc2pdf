@@ -9,6 +9,22 @@ With doc2pdf, it is possible to merge any combination of .doc, .docx, and .pdf f
 ## Usage
 TODO
 
+## Save File Format
+doc2pdf allows you to save your settings, so you can easily load them up later.
+
+These settings are saved in plain text files with the extension ".doc2pdf"
+
+Each line in the file represents one setting. Here is the format:
+```
+Include Cover Page. Value will be: True|False
+Delete PDFs after Merge. Value will be: True|False
+Cover Page Line 1. Value will be a string.
+Cover Page Line 2. Value will be a string.
+Cover Page Line 3. Value will be a string.
+Cover Page Line 4. Value will be a string.
+Logo. Value will be a string with the path of the image.
+The remaining lines contain the path to each .doc, .docx, or .pdf file
+```
 ## Installing
 doc2pdf compiles into one little EXE file.
 
