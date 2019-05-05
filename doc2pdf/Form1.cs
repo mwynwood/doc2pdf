@@ -64,15 +64,22 @@ namespace doc2pdf
                 return new FileInfo(Application.StartupPath + "\\" + documentToConvert.Name);
             }else if (appWord.Documents != null)
             {
-                var wordDocument = appWord.Documents.Open(documentToConvert.FullName);
-                FileInfo pdfDocName = new FileInfo(Application.StartupPath + "\\" + documentToConvert.Name + ".pdf");
-
-                if (wordDocument != null)
+                try
                 {
-                    wordDocument.SaveAs2(pdfDocName.FullName, Microsoft.Office.Interop.Word.WdSaveFormat.wdFormatPDF);
-                    wordDocument.Close();
-                    appWord.Quit();
-                    return pdfDocName;
+                    var wordDocument = appWord.Documents.Open(documentToConvert.FullName);
+                    FileInfo pdfDocName = new FileInfo(Application.StartupPath + "\\" + documentToConvert.Name + ".pdf");
+
+                    if (wordDocument != null)
+                    {
+                        wordDocument.SaveAs2(pdfDocName.FullName, Microsoft.Office.Interop.Word.WdSaveFormat.wdFormatPDF);
+                        wordDocument.Close();
+                        appWord.Quit();
+                        return pdfDocName;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
             appWord.Quit();
@@ -125,6 +132,11 @@ namespace doc2pdf
                 buttonDocMoveUp.Enabled = true;
                 buttonDocMoveDown.Enabled = true;
             }
+
+            if (textBoxLogo.Text != "")
+            {
+                pictureBoxLogo.ImageLocation = textBoxLogo.Text;
+            }
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -172,39 +184,53 @@ namespace doc2pdf
                 }
 
                 // Merge the PDF files into one
-                PdfDocument outputDocument = new PdfDocument();
-                foreach (FileInfo file in allThePDFs)
+                try
                 {
-                    // Attention: must be in Import mode
-                    var mode = PdfDocumentOpenMode.Import;
-                    var inputDocument = PdfReader.Open(file.FullName, mode);
-                    int totalPages = inputDocument.PageCount;
-                    for (int pageNo = 0; pageNo < totalPages; pageNo++)
+                    PdfDocument outputDocument = new PdfDocument();
+                    foreach (FileInfo file in allThePDFs)
                     {
-                        // Get the page from the input document...
-                        PdfPage page = inputDocument.Pages[pageNo];
-                        // ...and copy it to the output document.
-                        outputDocument.AddPage(page);
+                        // Attention: must be in Import mode
+                        var mode = PdfDocumentOpenMode.Import;
+                        var inputDocument = PdfReader.Open(file.FullName, mode);
+                        int totalPages = inputDocument.PageCount;
+                        for (int pageNo = 0; pageNo < totalPages; pageNo++)
+                        {
+                            // Get the page from the input document...
+                            PdfPage page = inputDocument.Pages[pageNo];
+                            // ...and copy it to the output document.
+                            outputDocument.AddPage(page);
+                        }
                     }
+                    // Save the document
+                    outputDocument.Save(saveFileDialog1.FileName);
+                    outputDocument.Close();
                 }
-                // Save the document
-                outputDocument.Save(saveFileDialog1.FileName);
-                outputDocument.Close();
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
 
                 // Delete the PDF files
                 if (checkBoxDeletePdfsAfterMerge.Checked == true)
                 {
-                    foreach (FileInfo file in allThePDFs)
+                    try
                     {
-                        file.Delete();
+                        foreach (FileInfo file in allThePDFs)
+                        {
+                            file.Delete();
+                        }
+                        FileInfo cp = new FileInfo(coverPageFileName);
+                        cp.Delete();
                     }
-                    FileInfo cp = new FileInfo(coverPageFileName);
-                    cp.Delete();
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
 
                 Cursor.Current = Cursors.Default;
                 MessageBox.Show("Merge Complete!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                System.Diagnostics.Process.Start(saveFileDialog1.FileName);
+                //System.Diagnostics.Process.Start(saveFileDialog1.FileName);
             }
         }
 
@@ -324,20 +350,47 @@ namespace doc2pdf
         {
             using (StreamWriter writer = new StreamWriter("save.txt", false))
             {
-                writer.WriteLine("checkBoxCoverPage="+checkBoxCoverPage.Checked.ToString());
-                writer.WriteLine("checkBoxDeletePdfsAfterMerge="+checkBoxDeletePdfsAfterMerge.Checked.ToString());
-                writer.WriteLine("textBoxLine1="+textBoxLine1.Text);
-                writer.WriteLine("textBoxLine2="+textBoxLine2.Text);
-                writer.WriteLine("textBoxLine3="+textBoxLine3.Text);
-                writer.WriteLine("textBoxLine4="+textBoxLine4.Text);
-                writer.WriteLine("textBoxLogo="+textBoxLogo.Text);
-                writer.WriteLine("allTheFiles=");
+                writer.WriteLine(checkBoxCoverPage.Checked.ToString());
+                writer.WriteLine(checkBoxDeletePdfsAfterMerge.Checked.ToString());
+                writer.WriteLine(textBoxLine1.Text);
+                writer.WriteLine(textBoxLine2.Text);
+                writer.WriteLine(textBoxLine3.Text);
+                writer.WriteLine(textBoxLine4.Text);
+                writer.WriteLine(textBoxLogo.Text);
 
                 foreach (Object obj in allTheFiles)
                 {
                     writer.WriteLine(obj.ToString());
                 }
+
+                writer.Close();
             }
+        }
+
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TextReader tr;
+            tr = File.OpenText("save.txt");
+
+            checkBoxCoverPage.Checked = bool.Parse(tr.ReadLine());
+            checkBoxDeletePdfsAfterMerge.Checked = bool.Parse(tr.ReadLine());
+            textBoxLine1.Text = tr.ReadLine();
+            textBoxLine2.Text = tr.ReadLine();
+            textBoxLine3.Text = tr.ReadLine();
+            textBoxLine4.Text = tr.ReadLine();
+            textBoxLogo.Text = tr.ReadLine();
+
+            allTheFiles.Clear();
+
+            string line;
+            while ((line = tr.ReadLine()) != null)
+            {
+                allTheFiles.Add(new FileInfo(line));
+            }
+
+            tr.Close();
+            
+            updateInterface();
         }
     }
 }
