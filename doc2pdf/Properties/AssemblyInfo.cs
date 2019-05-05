@@ -7,11 +7,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("doc2pdf")]
-[assembly: AssemblyDescription("Bulk converts Word Documents to PDFs, and merge the PDFs into one. \n \n https://github.com/mwynwood/doc2pdf2")]
+[assembly: AssemblyDescription("Compiles Word Documents and PDF files into one big PDF file.\r\n\r\nhttps://github.com/mwynwood/doc2pdf\r\n\r\nhttp://mwynwood.com")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Marcus Wynwood")]
 [assembly: AssemblyProduct("doc2pdf")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright © 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

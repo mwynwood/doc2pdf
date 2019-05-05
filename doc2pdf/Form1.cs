@@ -136,6 +136,9 @@ namespace doc2pdf
             if (textBoxLogo.Text != "")
             {
                 pictureBoxLogo.ImageLocation = textBoxLogo.Text;
+            } else
+            {
+                pictureBoxLogo.Image = doc2pdf.Properties.Resources.merge_png;
             }
         }
 
@@ -341,55 +344,81 @@ namespace doc2pdf
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show(Application.ProductName + "\n" + "Converts Word Docs to PDFs, and merges them together.\n\nCreated by Marcus Wynwood\nhttps://github.com/mwynwood/doc2pdf2", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Question);
             AboutBox1 about = new AboutBox1();
             about.ShowDialog();
         }
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (StreamWriter writer = new StreamWriter("save.txt", false))
-            {
-                writer.WriteLine(checkBoxCoverPage.Checked.ToString());
-                writer.WriteLine(checkBoxDeletePdfsAfterMerge.Checked.ToString());
-                writer.WriteLine(textBoxLine1.Text);
-                writer.WriteLine(textBoxLine2.Text);
-                writer.WriteLine(textBoxLine3.Text);
-                writer.WriteLine(textBoxLine4.Text);
-                writer.WriteLine(textBoxLogo.Text);
+            saveFileDialog1.Filter = "doc2pdf Settings|*.doc2pdf";
+            saveFileDialog1.Title = "Save Your Settings";
+            saveFileDialog1.DefaultExt = ".doc2pdf";
+            saveFileDialog1.FileName = "settings";
+            saveFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString();
 
-                foreach (Object obj in allTheFiles)
+            if(saveFileDialog1.ShowDialog() == DialogResult.OK) { 
+                try { 
+                    using (StreamWriter writer = new StreamWriter(saveFileDialog1.FileName, false))
+                    {
+                        writer.WriteLine(checkBoxCoverPage.Checked.ToString());
+                        writer.WriteLine(checkBoxDeletePdfsAfterMerge.Checked.ToString());
+                        writer.WriteLine(textBoxLine1.Text);
+                        writer.WriteLine(textBoxLine2.Text);
+                        writer.WriteLine(textBoxLine3.Text);
+                        writer.WriteLine(textBoxLine4.Text);
+                        writer.WriteLine(textBoxLogo.Text);
+                        foreach (Object obj in allTheFiles)
+                        {
+                            writer.WriteLine(obj.ToString());
+                        }
+                        writer.Close();
+                        //MessageBox.Show("Settings Saved", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                } catch (Exception ex)
                 {
-                    writer.WriteLine(obj.ToString());
+                    MessageBox.Show(ex.Message);
                 }
-
-                writer.Close();
             }
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TextReader tr;
-            tr = File.OpenText("save.txt");
+            openFileDialog1.Filter = "doc2pdf Settings|*.doc2pdf";
+            openFileDialog1.Title = "Open Settings";
+            openFileDialog1.DefaultExt = ".doc2pdf";
+            openFileDialog1.FileName = "";
 
-            checkBoxCoverPage.Checked = bool.Parse(tr.ReadLine());
-            checkBoxDeletePdfsAfterMerge.Checked = bool.Parse(tr.ReadLine());
-            textBoxLine1.Text = tr.ReadLine();
-            textBoxLine2.Text = tr.ReadLine();
-            textBoxLine3.Text = tr.ReadLine();
-            textBoxLine4.Text = tr.ReadLine();
-            textBoxLogo.Text = tr.ReadLine();
-
-            allTheFiles.Clear();
-
-            string line;
-            while ((line = tr.ReadLine()) != null)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                allTheFiles.Add(new FileInfo(line));
+                try
+                {
+                    TextReader tr;
+                    tr = File.OpenText(openFileDialog1.FileName);
+                    checkBoxCoverPage.Checked = bool.Parse(tr.ReadLine());
+                    checkBoxDeletePdfsAfterMerge.Checked = bool.Parse(tr.ReadLine());
+                    textBoxLine1.Text = tr.ReadLine();
+                    textBoxLine2.Text = tr.ReadLine();
+                    textBoxLine3.Text = tr.ReadLine();
+                    textBoxLine4.Text = tr.ReadLine();
+                    textBoxLogo.Text = tr.ReadLine();
+                    allTheFiles.Clear();
+                    string line;
+                    while ((line = tr.ReadLine()) != null)
+                    {
+                        allTheFiles.Add(new FileInfo(line));
+                    }
+                    tr.Close();
+                    updateInterface();
+                } catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
+        }
 
-            tr.Close();
-            
+        private void ButtonRemoveLogo_Click(object sender, EventArgs e)
+        {
+            textBoxLogo.Text = "";
             updateInterface();
         }
     }
