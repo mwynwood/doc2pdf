@@ -63,9 +63,9 @@ namespace doc2pdf.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon icons8_merge_files_96 {
+        internal static System.Drawing.Icon merge_ico {
             get {
-                object obj = ResourceManager.GetObject("icons8_merge_files_96", resourceCulture);
+                object obj = ResourceManager.GetObject("merge_ico", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -75,7 +75,7 @@ namespace doc2pdf.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap merge_png {
             get {
-                object obj = ResourceManager.GetObject("merge-png", resourceCulture);
+                object obj = ResourceManager.GetObject("merge_png", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

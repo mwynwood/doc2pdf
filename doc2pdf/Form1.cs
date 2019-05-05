@@ -90,7 +90,7 @@ namespace doc2pdf
         {
             InitializeComponent();
             this.Text = Application.ProductName;
-            this.Icon = doc2pdf.Properties.Resources.icons8_merge_files_96;
+            this.Icon = doc2pdf.Properties.Resources.merge_ico;
 
             FileInfo fiCoverPage = new FileInfo(coverPageFileName);
             allTheFiles.Insert(0, fiCoverPage);
