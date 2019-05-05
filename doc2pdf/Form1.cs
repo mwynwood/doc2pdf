@@ -319,5 +319,25 @@ namespace doc2pdf
             AboutBox1 about = new AboutBox1();
             about.ShowDialog();
         }
+
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (StreamWriter writer = new StreamWriter("save.txt", false))
+            {
+                writer.WriteLine("checkBoxCoverPage="+checkBoxCoverPage.Checked.ToString());
+                writer.WriteLine("checkBoxDeletePdfsAfterMerge="+checkBoxDeletePdfsAfterMerge.Checked.ToString());
+                writer.WriteLine("textBoxLine1="+textBoxLine1.Text);
+                writer.WriteLine("textBoxLine2="+textBoxLine2.Text);
+                writer.WriteLine("textBoxLine3="+textBoxLine3.Text);
+                writer.WriteLine("textBoxLine4="+textBoxLine4.Text);
+                writer.WriteLine("textBoxLogo="+textBoxLogo.Text);
+                writer.WriteLine("allTheFiles=");
+
+                foreach (Object obj in allTheFiles)
+                {
+                    writer.WriteLine(obj.ToString());
+                }
+            }
+        }
     }
 }
