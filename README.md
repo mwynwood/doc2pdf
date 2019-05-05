@@ -1,5 +1,5 @@
-<img align="right" src="https://github.com/mwynwood/doc2pdf/blob/master/doc2pdf/Resources/merge-png.png">
 # doc2pdf
+<img align="right" src="https://github.com/mwynwood/doc2pdf/blob/master/doc2pdf/Resources/merge-png.png">
 Compiles Word Documents and PDF files into one big PDF file.
 
 ## About
