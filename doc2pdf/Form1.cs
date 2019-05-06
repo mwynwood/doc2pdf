@@ -15,10 +15,8 @@ using Microsoft.Office.Interop;
 
 using PdfSharp;
 using PdfSharp.Drawing;
-using PdfSharp.Drawing.Layout;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
-using System.Drawing;
 
 namespace doc2pdf
 {
@@ -57,7 +55,7 @@ namespace doc2pdf
             gfx.DrawString(textBoxLine2.Text, font, XBrushes.Black, new XRect(0, 40, page.Width, page.Height), XStringFormats.Center);
             gfx.DrawString(textBoxLine3.Text, font, XBrushes.Black, new XRect(0, 80, page.Width, page.Height), XStringFormats.Center);
             gfx.DrawString(textBoxLine4.Text, font, XBrushes.Black, new XRect(0, 120, page.Width, page.Height), XStringFormats.Center);
-
+           
             // Save the document...
             document.Save(outputFileName);
             document.Close();
