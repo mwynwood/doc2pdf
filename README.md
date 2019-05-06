@@ -23,6 +23,16 @@ Cover Page Line 2. Value will be a string.
 Cover Page Line 3. Value will be a string.
 Cover Page Line 4. Value will be a string.
 Logo. Value will be a string with the path of the image.
+Spare spot for a future setting.
+Spare spot for a future setting.
+Spare spot for a future setting.
+Spare spot for a future setting.
+Spare spot for a future setting.
+Spare spot for a future setting.
+Spare spot for a future setting.
+Spare spot for a future setting.
+Spare spot for a future setting.
+Spare spot for a future setting.
 The remaining lines contain the path to each .doc, .docx, or .pdf file
 ```
 ## Installing
