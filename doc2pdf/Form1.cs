@@ -15,6 +15,7 @@ using Microsoft.Office.Interop;
 
 using PdfSharp;
 using PdfSharp.Drawing;
+using PdfSharp.Drawing.Layout;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using System.Drawing;
@@ -31,15 +32,18 @@ namespace doc2pdf
         public void generateCoverPage(string outputFileName, string theImage)
         {
             PdfDocument document = new PdfDocument();
-            PdfPage page = document.AddPage();
-            XGraphics gfx = XGraphics.FromPdfPage(page);
-            XFont font = new XFont("Calibri", 20, XFontStyle.Bold);
+            document.Info.Title = "doc2pdf Cover Page";
 
-            // Draw the text
-            gfx.DrawString(textBoxLine1.Text, font, XBrushes.Black, new XRect(0,   0, page.Width, page.Height), XStringFormats.Center);
-            gfx.DrawString(textBoxLine2.Text, font, XBrushes.Black, new XRect(0,  40, page.Width, page.Height), XStringFormats.Center);
-            gfx.DrawString(textBoxLine3.Text, font, XBrushes.Black, new XRect(0,  80, page.Width, page.Height), XStringFormats.Center);
-            gfx.DrawString(textBoxLine4.Text, font, XBrushes.Black, new XRect(0, 120, page.Width, page.Height), XStringFormats.Center);
+            // Create an empty page
+            PdfPage page = document.AddPage();
+            //page.Width = 595
+            //page.Height = 842
+
+            // Get an XGraphics object for drawing
+            XGraphics gfx = XGraphics.FromPdfPage(page);
+
+            // Create a font
+            XFont font = new XFont("Calibri", 20, XFontStyle.Bold);
 
             // Draw the image
             if (theImage.Length > 0)
@@ -47,6 +51,12 @@ namespace doc2pdf
                 XImage image = XImage.FromFile(theImage);
                 gfx.DrawImage(image, 200, 200, 200, 200); // this makes it square. scale it!
             }
+            
+            // Draw the text
+            gfx.DrawString(textBoxLine1.Text, font, XBrushes.Black, new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
+            gfx.DrawString(textBoxLine2.Text, font, XBrushes.Black, new XRect(0, 40, page.Width, page.Height), XStringFormats.Center);
+            gfx.DrawString(textBoxLine3.Text, font, XBrushes.Black, new XRect(0, 80, page.Width, page.Height), XStringFormats.Center);
+            gfx.DrawString(textBoxLine4.Text, font, XBrushes.Black, new XRect(0, 120, page.Width, page.Height), XStringFormats.Center);
 
             // Save the document...
             document.Save(outputFileName);
@@ -232,8 +242,10 @@ namespace doc2pdf
                 }
 
                 Cursor.Current = Cursors.Default;
-                MessageBox.Show("Merge Complete!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                //System.Diagnostics.Process.Start(saveFileDialog1.FileName);
+                if (MessageBox.Show("Merge Complete!" + Environment.NewLine + "View the merged file?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    System.Diagnostics.Process.Start(saveFileDialog1.FileName);
+                }
             }
         }
 
@@ -367,6 +379,16 @@ namespace doc2pdf
                         writer.WriteLine(textBoxLine3.Text);
                         writer.WriteLine(textBoxLine4.Text);
                         writer.WriteLine(textBoxLogo.Text);
+                        writer.WriteLine("-"); // Spare spot for a future setting
+                        writer.WriteLine("-"); // Spare spot for a future setting
+                        writer.WriteLine("-"); // Spare spot for a future setting
+                        writer.WriteLine("-"); // Spare spot for a future setting
+                        writer.WriteLine("-"); // Spare spot for a future setting
+                        writer.WriteLine("-"); // Spare spot for a future setting
+                        writer.WriteLine("-"); // Spare spot for a future setting
+                        writer.WriteLine("-"); // Spare spot for a future setting
+                        writer.WriteLine("-"); // Spare spot for a future setting
+                        writer.WriteLine("-"); // Spare spot for a future setting
                         foreach (Object obj in allTheFiles)
                         {
                             writer.WriteLine(obj.ToString());
@@ -392,6 +414,7 @@ namespace doc2pdf
             {
                 try
                 {
+                    string spareSetting;
                     TextReader tr;
                     tr = File.OpenText(openFileDialog1.FileName);
                     checkBoxCoverPage.Checked = bool.Parse(tr.ReadLine());
@@ -401,6 +424,16 @@ namespace doc2pdf
                     textBoxLine3.Text = tr.ReadLine();
                     textBoxLine4.Text = tr.ReadLine();
                     textBoxLogo.Text = tr.ReadLine();
+                    spareSetting = tr.ReadLine();// Spare spot for a future setting
+                    spareSetting = tr.ReadLine();// Spare spot for a future setting
+                    spareSetting = tr.ReadLine();// Spare spot for a future setting
+                    spareSetting = tr.ReadLine();// Spare spot for a future setting
+                    spareSetting = tr.ReadLine();// Spare spot for a future setting
+                    spareSetting = tr.ReadLine();// Spare spot for a future setting
+                    spareSetting = tr.ReadLine();// Spare spot for a future setting
+                    spareSetting = tr.ReadLine();// Spare spot for a future setting
+                    spareSetting = tr.ReadLine();// Spare spot for a future setting
+                    spareSetting = tr.ReadLine();// Spare spot for a future setting
                     allTheFiles.Clear();
                     string line;
                     while ((line = tr.ReadLine()) != null)
