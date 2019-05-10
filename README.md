@@ -6,7 +6,7 @@ I created doc2pdf so that I could quickly and easily create "Assessment Packages
 
 With doc2pdf, it is possible to merge any combination of .doc, .docx, and .pdf files together to create one PDF file. You also have the option to add a Cover Page to the merged document, and save your settings to recall and edit later.
 
-## Usage
+## Screenshot
 <img src="https://github.com/mwynwood/doc2pdf/blob/master/screenshot.png">
 
 ## Save File Format
