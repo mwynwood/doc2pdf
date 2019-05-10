@@ -40,6 +40,8 @@ doc2pdf compiles into one little EXE file.
 
 As long as you've got the .NET Framework and Microsoft Office installed, it should run.
 
+You can download an EXE here: https://github.com/mwynwood/doc2pdf/blob/master/doc2pdf.exe
+
 ## Built With
 * [PDFSharp](http://www.pdfsharp.net/) - Open Source .NET library that easily creates and processes PDFs
 * [Microsoft Word](https://www.office.com/) - doc2pdf uses "Microsoft Word 2016" to convert Word Documents to PDF.
