@@ -451,5 +451,30 @@ namespace doc2pdf
             textBoxLogo.Text = "";
             updateInterface();
         }
+
+        private void ListBoxDocs_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (string file in files)
+            {
+                FileInfo fi = new FileInfo(file);
+                if (fi.Extension == ".pdf" || fi.Extension == ".doc" || fi.Extension == ".docx")
+                {
+                    allTheFiles.Insert(allTheFiles.Count, file);
+                } else
+                {
+                    MessageBox.Show("Only PDF, DOC and DOCX files supported.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            updateInterface();
+        }
+
+        private void ListBoxDocs_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
     }
 }

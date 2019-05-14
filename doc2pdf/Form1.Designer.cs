@@ -31,6 +31,7 @@
             this.textBoxLine1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxCoverPage = new System.Windows.Forms.GroupBox();
+            this.buttonRemoveLogo = new System.Windows.Forms.Button();
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.buttonLogo = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
@@ -71,7 +72,6 @@
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.buttonRemoveLogo = new System.Windows.Forms.Button();
             this.groupBoxCoverPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -120,6 +120,17 @@
             this.groupBoxCoverPage.TabIndex = 2;
             this.groupBoxCoverPage.TabStop = false;
             this.groupBoxCoverPage.Text = "Cover Page";
+            // 
+            // buttonRemoveLogo
+            // 
+            this.buttonRemoveLogo.Location = new System.Drawing.Point(486, 239);
+            this.buttonRemoveLogo.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonRemoveLogo.Name = "buttonRemoveLogo";
+            this.buttonRemoveLogo.Size = new System.Drawing.Size(110, 38);
+            this.buttonRemoveLogo.TabIndex = 12;
+            this.buttonRemoveLogo.Text = "Remove";
+            this.buttonRemoveLogo.UseVisualStyleBackColor = true;
+            this.buttonRemoveLogo.Click += new System.EventHandler(this.ButtonRemoveLogo_Click);
             // 
             // pictureBoxLogo
             // 
@@ -384,6 +395,7 @@
             // 
             // listBoxDocs
             // 
+            this.listBoxDocs.AllowDrop = true;
             this.listBoxDocs.FormattingEnabled = true;
             this.listBoxDocs.HorizontalScrollbar = true;
             this.listBoxDocs.ItemHeight = 25;
@@ -391,6 +403,8 @@
             this.listBoxDocs.Name = "listBoxDocs";
             this.listBoxDocs.Size = new System.Drawing.Size(592, 579);
             this.listBoxDocs.TabIndex = 0;
+            this.listBoxDocs.DragDrop += new System.Windows.Forms.DragEventHandler(this.ListBoxDocs_DragDrop);
+            this.listBoxDocs.DragEnter += new System.Windows.Forms.DragEventHandler(this.ListBoxDocs_DragEnter);
             // 
             // buttonGo
             // 
@@ -459,17 +473,6 @@
             this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(324, 38);
             this.aboutToolStripMenuItem1.Text = "&About...";
             this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
-            // 
-            // buttonRemoveLogo
-            // 
-            this.buttonRemoveLogo.Location = new System.Drawing.Point(486, 239);
-            this.buttonRemoveLogo.Margin = new System.Windows.Forms.Padding(4);
-            this.buttonRemoveLogo.Name = "buttonRemoveLogo";
-            this.buttonRemoveLogo.Size = new System.Drawing.Size(110, 38);
-            this.buttonRemoveLogo.TabIndex = 12;
-            this.buttonRemoveLogo.Text = "Remove";
-            this.buttonRemoveLogo.UseVisualStyleBackColor = true;
-            this.buttonRemoveLogo.Click += new System.EventHandler(this.ButtonRemoveLogo_Click);
             // 
             // Form1
             // 
