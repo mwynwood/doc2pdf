@@ -20,7 +20,6 @@ using PdfSharp.Pdf.IO;
 
 namespace doc2pdf
 {
-
     public partial class Form1 : Form 
     {
         ArrayList allTheFiles = new ArrayList(); // Used to keep track of the DOCs
