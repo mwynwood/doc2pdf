@@ -460,7 +460,7 @@ namespace doc2pdf
                 FileInfo fi = new FileInfo(file);
                 if (fi.Extension == ".pdf" || fi.Extension == ".doc" || fi.Extension == ".docx")
                 {
-                    allTheFiles.Insert(allTheFiles.Count, file);
+                    allTheFiles.Insert(allTheFiles.Count, fi);
                 } else
                 {
                     MessageBox.Show("Only PDF, DOC and DOCX files supported.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
