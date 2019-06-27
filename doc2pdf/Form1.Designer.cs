@@ -42,7 +42,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,11 +56,11 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.buttonDocAdd = new System.Windows.Forms.Button();
             this.buttonDocRemove = new System.Windows.Forms.Button();
             this.buttonDocMoveDown = new System.Windows.Forms.Button();
             this.buttonDocMoveUp = new System.Windows.Forms.Button();
-            this.listBoxDocs = new System.Windows.Forms.ListBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.buttonGo = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -76,6 +75,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // textBoxLine1
@@ -227,16 +227,6 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Line 2:";
             // 
-            // statusStrip1
-            // 
-            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.statusStrip1.Location = new System.Drawing.Point(0, 841);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 14, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(1300, 22);
-            this.statusStrip1.TabIndex = 3;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
             // menuStrip1
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
@@ -245,7 +235,7 @@
             this.helpToolStripMenuItem2});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1300, 40);
+            this.menuStrip1.Size = new System.Drawing.Size(1474, 40);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -339,23 +329,49 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.dataGridView1);
             this.groupBox2.Controls.Add(this.buttonDocAdd);
             this.groupBox2.Controls.Add(this.buttonDocRemove);
             this.groupBox2.Controls.Add(this.buttonDocMoveDown);
             this.groupBox2.Controls.Add(this.buttonDocMoveUp);
-            this.groupBox2.Controls.Add(this.listBoxDocs);
             this.groupBox2.Location = new System.Drawing.Point(649, 71);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox2.Size = new System.Drawing.Size(632, 726);
+            this.groupBox2.Size = new System.Drawing.Size(680, 726);
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Documents to Merge";
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowDrop = true;
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AllowUserToResizeRows = false;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.ColumnHeadersVisible = false;
+            this.dataGridView1.Location = new System.Drawing.Point(20, 33);
+            this.dataGridView1.MultiSelect = false;
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.RowHeadersVisible = false;
+            this.dataGridView1.RowTemplate.Height = 20;
+            this.dataGridView1.RowTemplate.ReadOnly = true;
+            this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView1.ShowEditingIcon = false;
+            this.dataGridView1.Size = new System.Drawing.Size(644, 595);
+            this.dataGridView1.TabIndex = 5;
+            this.dataGridView1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.DataGridView1_DataError);
+            this.dataGridView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.DataGridView1_DragDrop);
+            this.dataGridView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.DataGridView1_DragEnter);
+            // 
             // buttonDocAdd
             // 
-            this.buttonDocAdd.Location = new System.Drawing.Point(492, 643);
+            this.buttonDocAdd.Location = new System.Drawing.Point(544, 643);
             this.buttonDocAdd.Name = "buttonDocAdd";
             this.buttonDocAdd.Size = new System.Drawing.Size(120, 60);
             this.buttonDocAdd.TabIndex = 4;
@@ -365,7 +381,7 @@
             // 
             // buttonDocRemove
             // 
-            this.buttonDocRemove.Location = new System.Drawing.Point(366, 643);
+            this.buttonDocRemove.Location = new System.Drawing.Point(418, 643);
             this.buttonDocRemove.Name = "buttonDocRemove";
             this.buttonDocRemove.Size = new System.Drawing.Size(120, 60);
             this.buttonDocRemove.TabIndex = 3;
@@ -392,19 +408,6 @@
             this.buttonDocMoveUp.Text = "Up";
             this.buttonDocMoveUp.UseVisualStyleBackColor = true;
             this.buttonDocMoveUp.Click += new System.EventHandler(this.ButtonDocMoveUp_Click);
-            // 
-            // listBoxDocs
-            // 
-            this.listBoxDocs.AllowDrop = true;
-            this.listBoxDocs.FormattingEnabled = true;
-            this.listBoxDocs.HorizontalScrollbar = true;
-            this.listBoxDocs.ItemHeight = 25;
-            this.listBoxDocs.Location = new System.Drawing.Point(20, 33);
-            this.listBoxDocs.Name = "listBoxDocs";
-            this.listBoxDocs.Size = new System.Drawing.Size(592, 579);
-            this.listBoxDocs.TabIndex = 0;
-            this.listBoxDocs.DragDrop += new System.Windows.Forms.DragEventHandler(this.ListBoxDocs_DragDrop);
-            this.listBoxDocs.DragEnter += new System.Windows.Forms.DragEventHandler(this.ListBoxDocs_DragEnter);
             // 
             // buttonGo
             // 
@@ -478,19 +481,18 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1300, 863);
+            this.ClientSize = new System.Drawing.Size(1474, 829);
             this.Controls.Add(this.checkBoxDeletePdfsAfterMerge);
             this.Controls.Add(this.checkBoxCoverPage);
             this.Controls.Add(this.buttonGo);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.groupBoxCoverPage);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1326, 934);
-            this.MinimumSize = new System.Drawing.Size(1326, 934);
+            this.MaximumSize = new System.Drawing.Size(1500, 900);
+            this.MinimumSize = new System.Drawing.Size(1500, 900);
             this.Name = "Form1";
             this.groupBoxCoverPage.ResumeLayout(false);
             this.groupBoxCoverPage.PerformLayout();
@@ -498,6 +500,7 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -514,7 +517,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.Button buttonLogo;
         private System.Windows.Forms.Label label5;
@@ -526,7 +528,6 @@
         private System.Windows.Forms.Button buttonGo;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.CheckBox checkBoxCoverPage;
-        private System.Windows.Forms.ListBox listBoxDocs;
         private System.Windows.Forms.Button buttonDocAdd;
         private System.Windows.Forms.Button buttonDocRemove;
         private System.Windows.Forms.Button buttonDocMoveDown;
@@ -549,6 +550,7 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Button buttonRemoveLogo;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }
 

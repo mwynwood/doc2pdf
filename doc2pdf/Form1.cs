@@ -69,7 +69,7 @@ namespace doc2pdf
                 // If it's already a PDF, just copy it to the working dir
                 documentToConvert.CopyTo(Application.StartupPath + "\\" + documentToConvert.Name, true);
                 return new FileInfo(Application.StartupPath + "\\" + documentToConvert.Name);
-            }else if (appWord.Documents != null)
+            } else if (appWord.Documents != null)
             {
                 try
                 {
@@ -107,11 +107,22 @@ namespace doc2pdf
 
         public void updateInterface()
         {
-            listBoxDocs.DataSource = null;
-            listBoxDocs.DataSource = allTheFiles;
-            listBoxDocs.DisplayMember = "Name";
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = allTheFiles;
+            foreach(DataGridViewColumn c in dataGridView1.Columns)
+            {
+                c.Visible = false;
+            }
+            try
+            {
+                dataGridView1.Columns["Name"].Visible = true;
+                dataGridView1.Columns["FullName"].Visible = true;
+            } catch(Exception ex)
+            {
+                // No rows to display...
+            }
 
-            if(allTheFiles.Count == 0)
+            if (allTheFiles.Count == 0)
             {
                 buttonDocRemove.Enabled = false;
                 buttonDocMoveUp.Enabled = false;
@@ -147,6 +158,9 @@ namespace doc2pdf
             {
                 pictureBoxLogo.Image = doc2pdf.Properties.Resources.merge_png;
             }
+
+            doTheFilesExist(allTheFiles);
+            dataGridView1.ClearSelection();
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -167,81 +181,108 @@ namespace doc2pdf
             }
         }
 
+        private bool doTheFilesExist(ArrayList input)
+        {
+            bool allFilesExist = true;
+            string filesNotFound = "";
+            for (int i = 0; i < allTheFiles.Count; i++)
+            {
+                FileInfo f = new FileInfo(input[i].ToString());
+                if (f.Exists == false && !f.Name.Equals(coverPageFileName))
+                {
+                    filesNotFound += f.Name.ToString() + Environment.NewLine;
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.LightSalmon;
+                    allFilesExist = false;
+                }
+            }
+            if (allFilesExist == false)
+            {
+                return false;
+            }
+            return true;
+        }
+
         private void ButtonGo_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.Filter = "PDF File|*.PDF";
-            saveFileDialog1.Title = "Save the merged document";
-            saveFileDialog1.DefaultExt = ".pdf";
-            saveFileDialog1.FileName = "merged";
-            saveFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString();
-
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (doTheFilesExist(allTheFiles) == false)
             {
-                Cursor.Current = Cursors.WaitCursor;
+                MessageBox.Show("Merge Aborted." + Environment.NewLine + "Some files are missing.", "Merge Aborted", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } else
+            {
+                saveFileDialog1.Filter = "PDF File|*.PDF";
+                saveFileDialog1.Title = "Save the merged document";
+                saveFileDialog1.DefaultExt = ".pdf";
+                saveFileDialog1.FileName = "merged";
+                saveFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToString();
 
-                // Generate the Cover Page
-                if (checkBoxCoverPage.Checked == true)
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    generateCoverPage(coverPageFileName, textBoxLogo.Text);
-                }
+                    Cursor.Current = Cursors.WaitCursor;
 
-                // Convert all the DOC and DOCX files to PDFs
-                // And put the PDFs in a new ArrayList
-                allThePDFs.Clear();
-                foreach (FileInfo doc in allTheFiles)
-                {
-                    allThePDFs.Add(convertDoc2Pdf(doc));
-                }
-
-                // Merge the PDF files into one
-                try
-                {
-                    PdfDocument outputDocument = new PdfDocument();
-                    foreach (FileInfo file in allThePDFs)
+                    // Generate the Cover Page
+                    if (checkBoxCoverPage.Checked == true)
                     {
-                        // Attention: must be in Import mode
-                        var mode = PdfDocumentOpenMode.Import;
-                        var inputDocument = PdfReader.Open(file.FullName, mode);
-                        int totalPages = inputDocument.PageCount;
-                        for (int pageNo = 0; pageNo < totalPages; pageNo++)
-                        {
-                            // Get the page from the input document...
-                            PdfPage page = inputDocument.Pages[pageNo];
-                            // ...and copy it to the output document.
-                            outputDocument.AddPage(page);
-                        }
+                        generateCoverPage(coverPageFileName, textBoxLogo.Text);
                     }
-                    // Save the document
-                    outputDocument.Save(saveFileDialog1.FileName);
-                    outputDocument.Close();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
 
-                // Delete the PDF files
-                if (checkBoxDeletePdfsAfterMerge.Checked == true)
-                {
+                    // Convert all the DOC and DOCX files to PDFs
+                    // And put the PDFs in a new ArrayList
+                    allThePDFs.Clear();
+                    foreach (FileInfo doc in allTheFiles)
+                    {
+                        allThePDFs.Add(convertDoc2Pdf(doc));
+                    }
+
+                    // Merge the PDF files into one
                     try
                     {
+                        PdfDocument outputDocument = new PdfDocument();
                         foreach (FileInfo file in allThePDFs)
                         {
-                            file.Delete();
+                            // Attention: must be in Import mode
+                            var mode = PdfDocumentOpenMode.Import;
+                            var inputDocument = PdfReader.Open(file.FullName, mode);
+                            int totalPages = inputDocument.PageCount;
+                            for (int pageNo = 0; pageNo < totalPages; pageNo++)
+                            {
+                                // Get the page from the input document...
+                                PdfPage page = inputDocument.Pages[pageNo];
+                                // ...and copy it to the output document.
+                                outputDocument.AddPage(page);
+                            }
                         }
-                        FileInfo cp = new FileInfo(coverPageFileName);
-                        cp.Delete();
+                        // Save the document
+                        outputDocument.Save(saveFileDialog1.FileName);
+                        outputDocument.Close();
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
                     }
-                }
 
-                Cursor.Current = Cursors.Default;
-                if (MessageBox.Show("Merge Complete!" + Environment.NewLine + "View the merged file?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    System.Diagnostics.Process.Start(saveFileDialog1.FileName);
+                    // Delete the PDF files
+                    if (checkBoxDeletePdfsAfterMerge.Checked == true)
+                    {
+                        try
+                        {
+                            foreach (FileInfo file in allThePDFs)
+                            {
+                                file.Delete();
+                            }
+                            FileInfo cp = new FileInfo(coverPageFileName);
+                            cp.Delete();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                    }
+
+                    Cursor.Current = Cursors.Default;
+                    if (MessageBox.Show("Merge Complete!" + Environment.NewLine + "View the merged file?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start(saveFileDialog1.FileName);
+                    }
                 }
             }
         }
@@ -259,7 +300,7 @@ namespace doc2pdf
                 allTheFiles.Insert(0, fiCoverPage);
             }
             updateInterface();
-            listBoxDocs.ClearSelected();
+            dataGridView1.ClearSelection();
         }
 
         private void ButtonDocAdd_Click(object sender, EventArgs e)
@@ -273,18 +314,16 @@ namespace doc2pdf
                 FileInfo fi = new FileInfo(@openFileDialog1.FileName);
                 allTheFiles.Insert(allTheFiles.Count, fi);
                 updateInterface();
-                listBoxDocs.SelectedIndex = allTheFiles.Count - 1;
-            }
-            
+            }            
         }
 
         private void ButtonDocRemove_Click(object sender, EventArgs e)
         {
-            if (listBoxDocs.SelectedIndex > -1)
+            if (dataGridView1.CurrentCell.RowIndex > -1)
             {
-                if (allTheFiles[listBoxDocs.SelectedIndex].ToString() != coverPageFileName)
+                if (allTheFiles[dataGridView1.CurrentCell.RowIndex].ToString() != coverPageFileName)
                 {
-                    allTheFiles.RemoveAt(listBoxDocs.SelectedIndex);
+                    allTheFiles.RemoveAt(dataGridView1.CurrentCell.RowIndex);
                     updateInterface();
                 }
                 else
@@ -296,7 +335,12 @@ namespace doc2pdf
 
         private void ButtonDocMoveUp_Click(object sender, EventArgs e)
         {
-            int selection = listBoxDocs.SelectedIndex;
+            int selection = 0;
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                selection = dataGridView1.CurrentCell.RowIndex;
+            }
+
             int toppest = 0;
 
             if(checkBoxCoverPage.Checked == true)
@@ -318,17 +362,20 @@ namespace doc2pdf
                 allTheFiles.Insert(selection - 1, selected);
                 allTheFiles.Insert(selection, above);
 
-                listBoxDocs.SelectedIndex = selection - 1;
-
                 updateInterface();
+                dataGridView1.Rows[selection - 1].Cells[0].Selected = true;
             }            
         }
 
         private void ButtonDocMoveDown_Click(object sender, EventArgs e)
         {
-            int selection = listBoxDocs.SelectedIndex;
+            int selection = 0;
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                selection = dataGridView1.CurrentCell.RowIndex;
+            }
 
-            if(selection == allTheFiles.Count - 1)
+            if (selection == allTheFiles.Count - 1)
             {
                 //MessageBox.Show("already at the bottom");
             } else if(selection == 0 && checkBoxCoverPage.Checked == true)
@@ -345,9 +392,8 @@ namespace doc2pdf
                 allTheFiles.Insert(selection, below);
                 allTheFiles.Insert(selection + 1, selected);
 
-                listBoxDocs.SelectedIndex = selection + 1;
-
                 updateInterface();
+                dataGridView1.Rows[selection+1].Cells[0].Selected = true;
             }
         }
 
@@ -438,7 +484,7 @@ namespace doc2pdf
                         allTheFiles.Add(new FileInfo(line));
                     }
                     tr.Close();
-                    updateInterface();
+                    updateInterface();                    
                 } catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
@@ -475,6 +521,37 @@ namespace doc2pdf
             {
                 e.Effect = DragDropEffects.Copy;
             }
+        }
+
+        private void DataGridView1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        private void DataGridView1_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (string file in files)
+            {
+                FileInfo fi = new FileInfo(file);
+                if (fi.Extension == ".pdf" || fi.Extension == ".doc" || fi.Extension == ".docx")
+                {
+                    allTheFiles.Insert(allTheFiles.Count, fi);
+                }
+                else
+                {
+                    MessageBox.Show("Only PDF, DOC and DOCX files supported.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            updateInterface();
+        }
+
+        private void DataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.ThrowException = false;
         }
     }
 }
